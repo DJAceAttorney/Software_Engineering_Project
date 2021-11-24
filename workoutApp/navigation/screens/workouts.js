@@ -1,14 +1,49 @@
 import * as React from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
+import { db } from '../../firebase-config';
+import { collection, getDocs } from 'firebase/firestore';
 
 export default function workout({ navigation }) {
+
+    //workouts holds db []
+    const [workouts, setWorkouts] = useState([]);
+
+    //call to workouts table in db
+    const workoutsCollectionRef = collection(db, "workouts");
+
+    useEffect (() => {
+
+        //getDoc sets workouts from the database
+        const getWorkouts = async () => {
+
+            const data = await getDocs(workoutsCollectionRef);
+            setWorkouts(data.docs.map((doc) => ({ ...doc.data(), id: doc.id})))
+
+        }
+
+        getWorkouts()
+
+    })
+    
     return (
         <View style={styles.container}>
 
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                
                 <Text
                     onPress={() => alert('This is the "Workout" screen.')}
                     style={{ color: 'white', fontSize: 26, fontWeight: 'bold' }}>Workout Screen</Text>
+
+                <Text>List of Workouts</Text>
+                {workouts.map((workout => {
+                    return (
+
+                        <Text key = {workout.id}> Name: {workout.name} </Text>
+
+                    );
+                }))}
+
             </View>
 
         </View>

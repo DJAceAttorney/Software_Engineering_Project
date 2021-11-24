@@ -1,8 +1,8 @@
 import * as React from 'react';
+import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-
 // Screens
 import workouts from './screens/workouts';
 import addWorkouts from './screens/addWorkouts';
@@ -17,7 +17,10 @@ const Tab = createBottomTabNavigator();
 
 function MainContainer() {
   return (
+  
     <NavigationContainer>
+
+      <StatusBar style="auto" />
       <Tab.Navigator
         initialRouteName={workoutsName}
         screenOptions={({ route }) => ({
