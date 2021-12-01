@@ -9,12 +9,13 @@ export default function workout({ navigation }) {
             <Text
                 style={styles.title}>Your Available Workouts</Text>
             </View>
-            <View style={styles.buttonContainer}>
-                <WorkoutButton/>
-                <WorkoutButton/>
-                <WorkoutButton/>
-                <WorkoutButton/>
-                <WorkoutButton/>
+            <View style={styles.buttonContainer}>{/*you can grab these from a JSON file or something*/}
+                <WorkoutButton name="Warm-up" numExercise="5" time="11"/>
+                <WorkoutButton name="Arm Day" numExercise="16" time="54"/>
+                <WorkoutButton name="Chest Day" numExercise="13" time="47"/>
+                <WorkoutButton name="Cardio" numExercise="10" time="54"/>
+                <WorkoutButton name="General Calisthenics" numExercise="12" time="43"/>
+                <WorkoutButton name="Cool down" numExercise="3" time="18"/>
             </View>
                     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
                 <Text

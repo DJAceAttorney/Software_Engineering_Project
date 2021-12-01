@@ -5,11 +5,11 @@ const WorkoutButton = (props) => {//going to use props to take in the object dat
     return (
         <View style={styles.container}>
                 <Text
-                    style={{ color: '#000', fontSize: 26, fontWeight: 'bold'}}>Warm Up</Text>
+                    style={{ color: '#000', fontSize: 26, fontWeight: 'bold'}}>{props.name}</Text>
                 <Text
-                    style={{ color: '#000', fontSize: 18, fontWeight: 'normal'}}>5 exercises</Text>
+                    style={{ color: '#000', fontSize: 18, fontWeight: 'normal'}}>{props.numExercise} exercises</Text>
                 <Text
-                    style={{ color: '#000', fontSize: 16, fontWeight: '300' }}>11 min </Text>
+                    style={{ color: '#000', fontSize: 16, fontWeight: '300' }}>{props.time} min </Text>
         </View>
     );
 }
