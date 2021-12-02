@@ -3,18 +3,21 @@ import { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, TextInput, Button, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { db } from '../../firebase-config';
 import { collection, getDocs, addDoc } from 'firebase/firestore';
+import { FlatList } from 'react-native-gesture-handler';
+import uuid from 'react-native-uuid';
+
 
 export default function addWorkouts({ navigation }) {
 
     //var for getting workout name
     const [newName, setNewName] = useState("");
 
-    //exercise object, includes name, reps, sets, weight
-    const [newExercise, setNewExercise] = useState({name: '', reps: 0, sets: 0, weight: 0});
+    //holds exercises
+    const [exercisesList, setExerciseList] = useState([]);
+    const [isRender, setisRender] = useState(false);
 
-    //const [newReps, setNewReps] = useState([]);
-    //const [newSets, setNewSets] = useState([]);
-    //const [newWeights, setNewWeights] = useState([]);
+    //exercise object, includes name, reps, sets, weight
+    const [newExercise, setNewExercise] = useState({name: '', reps: 0, sets: 0, weight: 0, id: uuid.v4()});
 
     //db reference to workouts table
     const workoutsCollectionRef = collection(db, "workouts");
@@ -40,34 +43,17 @@ export default function addWorkouts({ navigation }) {
     const createWorkout = async () => {
 
         //adds workout with a name and a list with an exercise object (may start with an empty list and add objects to list separately with function addWorkoutExer())
-        await addDoc(workoutsCollectionRef, {name: newName, exercises: [newExercise]})
+        await addDoc(workoutsCollectionRef, {name: newName, exercises: exercisesList})
 
     }
 
-    /*
+    //remove from exercise list
+    function removeItem(id) {
 
-    //function to delete workout
-    const deleteWorkout = async () => {
-
-
-
+        const removedFromList = exercisesList.filter((exercise) => exercise.id !== id);
+        setExerciseList(removedFromList);
+        
     }
-
-    //function to update/add an exercise object to list of exercises given a workout
-    const addWorkoutExercise = async () => {
-
-
-
-    }
-    
-    //function to update/delete an exercise object from list of exercises
-    const deleteWorkoutExercise = async () => {
-
-
-
-    }
-    
-    */
 
     return (
 
@@ -100,7 +86,6 @@ export default function addWorkouts({ navigation }) {
                         placeholder = "Enter a exercise"
                         />
 
-                    
                         
                     <TextInput
                         onChangeText = {x => 
@@ -127,9 +112,33 @@ export default function addWorkouts({ navigation }) {
                         />
                         
                 
+                    <Button title = "Add Workout" onPress = {() => {
+                        
+                        setNewExercise({...newExercise, id: uuid.v4()})
+                        setExerciseList([...exercisesList, newExercise])
+                        
+                        }}/>
+
+                    <FlatList 
+
+                        keyExtractor = {(item) => item.id}
+                        data = {exercisesList}
+                        renderItem = {({item}) => (
+
+                            <View>
+
+                                <Text>Exercise: {item.name} Reps: {item.reps} Sets: {item.sets} Weight: {item.weight}</Text>
+                                <Button title = "Delete" onPress = {() => removeItem(item.id)}/>
+                            
+                            </View>
+
+                        )}
+                        extraData = {isRender}
                     
-                    <Button title = "Add a workout" onPress = {createWorkout}/>
-                    {/*<Button title = "Add to workout" onPress = {updateExercise()}/>*/}
+                    />
+
+                   <Button title = "Save Workout" onPress = {createWorkout}/>
+                    
 
                 </View>
             </View>
