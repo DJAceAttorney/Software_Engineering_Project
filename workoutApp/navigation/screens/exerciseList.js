@@ -51,18 +51,14 @@ export default function exerciseList({ navigation }) {
         <View style={styles.container}>
 
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-
-                <Text
-                    onPress={() => navigation.navigate('Workouts')}
-                    style={{ color: 'white', fontSize: 26, fontWeight: 'bold' , alignItems: 'center' , justifyContent: 'center' }}>Exercise List</Text> 
+ 
                
                 {exercises.filter(checkUserMade => checkUserMade.user == false).map ((exercise) => { //lists non-usermade exercerises
 
                     return (
                         <Card key={exercise.id} containerStyle={styles.exerciseContainer}>
                             <Card.Title><Text>{exercise.name}</Text></Card.Title>
-                            <View>
-                                <Text>Description: {exercise.desc}</Text></View>
+                                <Text>Description: {exercise.desc}</Text>
 
                             </Card>
                     );
@@ -74,32 +70,33 @@ export default function exerciseList({ navigation }) {
 
                     return (
                         <Card key={exercise.id} containerStyle={styles.exerciseContainer}>
-                            <View>
-                                <Card.Title><Text>{exercise.name}</Text></Card.Title>
+                            <Card.Title><Text>{exercise.name}</Text></Card.Title>
                             <Text>Description: {exercise.desc}</Text>
                                 <Button onPress={() => deleteExerciseData(exercise.id)} title="Delete"
                                     buttonStyle={styles.delete}/>
-                                </View>
                             </Card>
 
                     );
 
                 })}
-                    
+                <View style={{ flexDirection: "row" }}>
                 <TextInput
-                        style = {styles.textbox}
-                        onChangeText = {newName => 
+                    style={styles.textbox1}
+                    onChangeText={newName =>
                         setNewExerciseName(newName)
-                        }
-                        value = {newExerciseName}
-                         placeholder = "Exercise Name"/>
+                    }
+                    value={newExerciseName}
+                    placeholder="Exercise Name" />
+                    
                  <TextInput
-                            style = {styles.textbox}
+                            style = {styles.textbox2}
                             onChangeText = {newDesc => 
                             setNewDescription(newDesc)
                             }
                             value = {newDescription}
-                            placeholder = "Description"/>
+                        placeholder="Description" />
+                    </View>
+                     
 
                 <Button title = "Add new exercise" onPress = {addExerciseData}/> 
 
@@ -110,7 +107,7 @@ export default function exerciseList({ navigation }) {
 
 const styles = StyleSheet.create({
 
-    textbox: {
+    textbox1: {
         backgroundColor: 'white',
         width: 150,
         borderColor: 'gray',
@@ -118,6 +115,18 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         padding: 10,
         margin: 10,
+        justifyContent: 'flex-start'
+    },
+
+    textbox2: {
+        backgroundColor: 'white',
+        width: 150,
+        borderColor: 'gray',
+        borderWidth: 1,
+        borderRadius: 10,
+        padding: 10,
+        margin: 10,
+        justifyContent: 'flex-end'
     },
 
     container: {
@@ -129,7 +138,9 @@ const styles = StyleSheet.create({
 
     delete: {
         color: 'white',
-        width: 100,
+        width: 70,
+        height: 30,
+        alignSelf: "flex-end",
     },
 
     exerciseContainer: {
@@ -137,9 +148,9 @@ const styles = StyleSheet.create({
         width: 300,
         minHeight: 50,
         borderColor: 'black',
-        borderWidth: 2,
+        borderWidth: 1,
         borderRadius: 10,
         padding: 3,
-        margin: 2,
+        margin: 4,
     },
 });

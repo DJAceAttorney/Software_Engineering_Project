@@ -32,11 +32,7 @@ export default function workout({ navigation }) {
 
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
                 
-                <Text
-                    onPress={() => alert('This is the "Workout" screen.')}
-                    style={{ color: 'white', fontSize: 26, fontWeight: 'bold' }}>Workout Screen</Text>
 
-                <Text>List of Workouts</Text>
                 {workouts.map((workout => {
                     return (
                         <Card containerStyle={styles.workoutContainer}>

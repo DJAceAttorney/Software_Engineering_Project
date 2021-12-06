@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, TextInput, Button, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet, View, Text, TextInput, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import { Card, ListItem, Icon, Button } from 'react-native-elements';
 import { db } from '../../firebase-config';
 import { collection, getDocs, addDoc } from 'firebase/firestore';
 import { FlatList } from 'react-native-gesture-handler';
@@ -64,52 +65,53 @@ export default function addWorkouts({ navigation }) {
         }}>
             <View style={styles.container}>
 
-                <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-
-                    <Text
-                        onPress={() => navigation.navigate('Workouts')}
-                        style={{ color: 'white', fontSize: 26, fontWeight: 'bold' }}>Add workout screen</Text>
-                
+                <View style={{ flexDirection: "row" }}>
                     <TextInput
+                        style={styles.textbox1}
                         onChangeText = {newName => 
                             setNewName(newName)
                         }
                         value = {newName}
-                        placeholder = "Enter a Workout Name"
+                        placeholder = "Workout Name"
                         />
 
                     <TextInput
+                        style={styles.textbox2}
                         onChangeText = {x => 
                             setNewExercise({...newExercise, name: x})
                         }
                         value = {newExercise.name}
-                        placeholder = "Enter a exercise"
+                        placeholder = "Exercise Name"
                         />
-
-                        
+                    </View>
+                <View style={{ flexDirection: "row" }}>
                     <TextInput
+                        style={styles.textbox3}
                         onChangeText = {x => 
                             setNewExercise({...newExercise, reps: parseInt(x)})
                         }
                         keyboardType='numeric'
-                        placeholder = "Enter reps"
+                        placeholder = "Reps"
                         />
 
                     <TextInput
+                        style={styles.textbox4}
                         onChangeText = {x => 
                             setNewExercise({...newExercise, sets: parseInt(x)})
                         }
                         keyboardType='numeric'
-                        placeholder = "Enter sets"
+                        placeholder = "Sets"
                         />
 
                     <TextInput
+                        style={styles.textbox4}
                         onChangeText = {x => 
                             setNewExercise({...newExercise, weight: parseInt(x)})
                         }
                         keyboardType='numeric'
-                        placeholder = "Enter a weight (lbs)"
-                        />
+                        placeholder = "Weight (lbs)"
+                    />
+                    </View>
                         
                 
                     <Button title = "Add Workout" onPress = {() => {
@@ -121,16 +123,14 @@ export default function addWorkouts({ navigation }) {
 
                     <FlatList 
 
-                        keyExtractor = {(item) => item.id}
-                        data = {exercisesList}
-                        renderItem = {({item}) => (
-
-                            <View>
-
+                        keyExtractor={(item) => item.id}
+                        data={exercisesList}
+                        renderItem={({ item }) => (
+                            <Card containerStyle={styles.exerciseContainer}>
+                                <Card.Title><Text>{item.name}</Text></Card.Title>
                                 <Text>Exercise: {item.name} Reps: {item.reps} Sets: {item.sets} Weight: {item.weight}</Text>
-                                <Button title = "Delete" onPress = {() => removeItem(item.id)}/>
-                            
-                            </View>
+                                    <Button buttonStyle={styles.delete} title = "Delete" onPress = {() => removeItem(item.id)}/>
+                                </Card>
 
                         )}
                         extraData = {isRender}
@@ -139,8 +139,6 @@ export default function addWorkouts({ navigation }) {
 
                    <Button title = "Save Workout" onPress = {createWorkout}/>
                     
-
-                </View>
             </View>
         </TouchableWithoutFeedback>
     );
@@ -153,5 +151,67 @@ const styles = StyleSheet.create({
       backgroundColor: '#5fa4ea',
       alignItems: 'center',
       justifyContent: 'center',
+    },
+
+    textbox1: {
+        backgroundColor: 'white',
+        width: 160,
+        borderColor: 'gray',
+        borderWidth: 1,
+        borderRadius: 10,
+        padding: 10,
+        margin: 10,
+        justifyContent: 'flex-start'
+    },
+
+    textbox2: {
+        backgroundColor: 'white',
+        width: 160,
+        borderColor: 'gray',
+        borderWidth: 1,
+        borderRadius: 10,
+        padding: 10,
+        margin: 10,
+        justifyContent: 'flex-end'
+    },
+
+    textbox3: {
+        backgroundColor: 'white',
+        width: 105,
+        borderColor: 'gray',
+        borderWidth: 1,
+        borderRadius: 10,
+        padding: 10,
+        margin: 10,
+        justifyContent: 'flex-start'
+    },
+
+    textbox4: {
+        backgroundColor: 'white',
+        width: 106,
+        borderColor: 'gray',
+        borderWidth: 1,
+        borderRadius: 10,
+        padding: 10,
+        margin: 10,
+        justifyContent: 'flex-end'
+    },
+
+
+    exerciseContainer: {
+        backgroundColor: 'white',
+        width: 300,
+        minHeight: 50,
+        borderColor: 'black',
+        borderWidth: 1,
+        borderRadius: 10,
+        padding: 3,
+        margin: 2,
+    },
+
+    delete: {
+        color: 'white',
+        width: 100,
+        height: 30,
     },
 });
