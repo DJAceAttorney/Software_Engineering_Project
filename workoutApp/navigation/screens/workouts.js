@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
+import { Card, ListItem, Icon, Button} from 'react-native-elements';
 import { db } from '../../firebase-config';
 import { collection, getDocs } from 'firebase/firestore';
 
@@ -38,8 +39,11 @@ export default function workout({ navigation }) {
                 <Text>List of Workouts</Text>
                 {workouts.map((workout => {
                     return (
-
-                        <Text key = {workout.id}> Name: {workout.name} </Text>
+                        <Card containerStyle={styles.workoutContainer}>
+                        <Card.Title>
+                                <Text key={workout.id}> {workout.name} </Text>
+                            </Card.Title>
+                            </Card>
 
                     );
                 }))}
@@ -58,4 +62,16 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       justifyContent: 'center',
     },
+
+    workoutContainer: {
+        backgroundColor: 'white',
+        width: 300,
+        minHeight: 50,
+        borderColor: 'black',
+        borderWidth: 2,
+        borderRadius: 10,
+        padding: 3,
+        margin: 2,
+    },
+
 });

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, TextInput, Button } from 'react-native';
+import { StyleSheet, View, Text, TextInput } from 'react-native';
+import { Card, ListItem, Icon, Button } from 'react-native-elements';
 import { db } from '../../firebase-config';
 import { collection, getDocs, addDoc, deleteDoc, doc } from 'firebase/firestore';
 
@@ -53,14 +54,17 @@ export default function exerciseList({ navigation }) {
 
                 <Text
                     onPress={() => navigation.navigate('Workouts')}
-                    style={{ color: 'white', fontSize: 26, fontWeight: 'bold' }}>Exercise list screen</Text>
-
+                    style={{ color: 'white', fontSize: 26, fontWeight: 'bold' , alignItems: 'center' , justifyContent: 'center' }}>Exercise List</Text> 
+               
                 {exercises.filter(checkUserMade => checkUserMade.user == false).map ((exercise) => { //lists non-usermade exercerises
 
                     return (
+                        <Card key={exercise.id} containerStyle={styles.exerciseContainer}>
+                            <Card.Title><Text>{exercise.name}</Text></Card.Title>
+                            <View>
+                                <Text>Description: {exercise.desc}</Text></View>
 
-                        <Text key = {exercise.id}>Name: {exercise.name}{"\n"}Description: {exercise.desc}</Text>
-
+                            </Card>
                     );
                     
                 })}
@@ -69,32 +73,33 @@ export default function exerciseList({ navigation }) {
                 {exercises.filter(checkUserMade => checkUserMade.user == true).map ((exercise) => { //lists usermade exercerises with delete button
 
                     return (
+                        <Card key={exercise.id} containerStyle={styles.exerciseContainer}>
+                            <View>
+                                <Card.Title><Text>{exercise.name}</Text></Card.Title>
+                            <Text>Description: {exercise.desc}</Text>
+                                <Button onPress={() => deleteExerciseData(exercise.id)} title="Delete"
+                                    buttonStyle={styles.delete}/>
+                                </View>
+                            </Card>
 
-                        <View key = {exercise.id}>
-                            <Text>Name: {exercise.name}{"\n"}Description: {exercise.desc}</Text>
-                            <Button title = "Delete" onPress = {() => deleteExerciseData(exercise.id)}/>
-                        </View>
                     );
 
                 })}
                     
-
                 <TextInput
-                    style = {styles.textbox}
-                    onChangeText = {newName => 
+                        style = {styles.textbox}
+                        onChangeText = {newName => 
                         setNewExerciseName(newName)
-                    }
-                    value = {newExerciseName}
-                    placeholder = "Exercise Name"
-                    />
-                <TextInput
-                    style = {styles.textbox}
-                    onChangeText = {newDesc => 
-                        setNewDescription(newDesc)
-                    }
-                    value = {newDescription}
-                    placeholder = "Description"
-                    /> 
+                        }
+                        value = {newExerciseName}
+                         placeholder = "Exercise Name"/>
+                 <TextInput
+                            style = {styles.textbox}
+                            onChangeText = {newDesc => 
+                            setNewDescription(newDesc)
+                            }
+                            value = {newDescription}
+                            placeholder = "Description"/>
 
                 <Button title = "Add new exercise" onPress = {addExerciseData}/> 
 
@@ -120,5 +125,21 @@ const styles = StyleSheet.create({
         backgroundColor: '#5fa4ea',
         alignItems: 'center',
         justifyContent: 'center',
+    },
+
+    delete: {
+        color: 'white',
+        width: 100,
+    },
+
+    exerciseContainer: {
+        backgroundColor: 'white',
+        width: 300,
+        minHeight: 50,
+        borderColor: 'black',
+        borderWidth: 2,
+        borderRadius: 10,
+        padding: 3,
+        margin: 2,
     },
 });
