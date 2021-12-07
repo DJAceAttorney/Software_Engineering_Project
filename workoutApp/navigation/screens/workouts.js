@@ -35,7 +35,7 @@ export default function workout({ navigation }) {
 
                 {workouts.map((workout => {
                     return (
-                        <Card containerStyle={styles.workoutContainer}>
+                        <Card key = {workout.id} containerStyle={styles.workoutContainer}>
                         <Card.Title>
                                 <Text key={workout.id}> {workout.name} </Text>
                             </Card.Title>
