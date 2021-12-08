@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, TextInput } from 'react-native';
-import { Card, ListItem, Icon, Button } from 'react-native-elements';
+import { StyleSheet, View, Text, TextInput, ScrollView } from 'react-native';
+import { Card, Button } from 'react-native-elements';
 import { db } from '../../firebase-config';
 import { collection, getDocs, addDoc, deleteDoc, doc } from 'firebase/firestore';
 
@@ -37,7 +37,7 @@ export default function exerciseList({ navigation }) {
         await addDoc(exercisesCollectionRef, {name: newExerciseName, desc: newDescription, user: true})
         setNewExerciseName("");
         setNewDescription("");
-
+    
     }
 
     const deleteExerciseData = async(id) => {
@@ -51,55 +51,56 @@ export default function exerciseList({ navigation }) {
         <View style={styles.container}>
 
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
- 
+                <ScrollView>
                
-                {exercises.filter(checkUserMade => checkUserMade.user == false).map ((exercise) => { //lists non-usermade exercerises
+                    {exercises.filter(checkUserMade => checkUserMade.user == false).map ((exercise) => { //lists non-usermade exercerises
 
-                    return (
-                        <Card key={exercise.id} containerStyle={styles.exerciseContainer}>
-                            <Card.Title><Text>{exercise.name}</Text></Card.Title>
+                        return (
+                            <Card key={exercise.id} containerStyle={styles.shadowContainer}>
+                                <Card.Title><Text>{exercise.name}</Text></Card.Title>
+                                    <Text>Description: {exercise.desc}</Text>
+
+                                </Card>
+                        );
+                        
+                    })}
+
+
+                    {exercises.filter(checkUserMade => checkUserMade.user == true).map ((exercise) => { //lists usermade exercerises with delete button
+
+                        return (
+                            <Card key={exercise.id} containerStyle={styles.shadowContainer}>
+                                <Card.Title><Text>{exercise.name}</Text></Card.Title>
                                 <Text>Description: {exercise.desc}</Text>
+                                    <Button onPress={() => deleteExerciseData(exercise.id)} title="Delete"
+                                        buttonStyle={styles.delete}/>
+                                </Card>
 
-                            </Card>
-                    );
-                    
-                })}
+                        );
 
+                    })}
 
-                {exercises.filter(checkUserMade => checkUserMade.user == true).map ((exercise) => { //lists usermade exercerises with delete button
-
-                    return (
-                        <Card key={exercise.id} containerStyle={styles.exerciseContainer}>
-                            <Card.Title><Text>{exercise.name}</Text></Card.Title>
-                            <Text>Description: {exercise.desc}</Text>
-                                <Button onPress={() => deleteExerciseData(exercise.id)} title="Delete"
-                                    buttonStyle={styles.delete}/>
-                            </Card>
-
-                    );
-
-                })}
+                </ScrollView>
                 <View style={{ flexDirection: "row" }}>
-                <TextInput
-                    style={styles.textbox1}
-                    onChangeText={newName =>
-                        setNewExerciseName(newName)
-                    }
-                    value={newExerciseName}
-                    placeholder="Exercise Name" />
-                    
-                 <TextInput
-                            style = {styles.textbox2}
-                            onChangeText = {newDesc => 
-                            setNewDescription(newDesc)
-                            }
-                            value = {newDescription}
-                        placeholder="Description" />
-                    </View>
-                     
+                    <TextInput
+                        style={styles.textbox1}
+                        onChangeText={newName =>
+                            setNewExerciseName(newName)
+                        }
+                        value={newExerciseName}
+                        placeholder="Exercise Name" />
+                        
+                    <TextInput
+                                style = {styles.textbox2}
+                                onChangeText = {newDesc => 
+                                setNewDescription(newDesc)
+                                }
+                                value = {newDescription}
+                            placeholder="Description" />
+                </View>
 
-                <Button title = "Add new exercise" onPress = {addExerciseData}/> 
-
+                <Button style = {{margin: 10}} title = "Add new exercise" onPress = {addExerciseData}/> 
+                
             </View>
         </View>
     );
@@ -153,4 +154,21 @@ const styles = StyleSheet.create({
         padding: 3,
         margin: 4,
     },
+
+    shadowContainer: {
+        display: "flex",
+        width: 300,
+        height: 100,
+        flexDirection: "column",
+        backgroundColor: 'white',
+        marginVertical: 10,
+        alignItems: 'flex-start',
+        justifyContent: 'center',
+        paddingHorizontal: 10,
+        borderRadius: 7,
+        shadowOffset: {height: 10, width: 10},
+        shadowColor: '#000',
+        shadowOpacity: 0.7,
+        shadowRadius: 5,
+      },
 });
