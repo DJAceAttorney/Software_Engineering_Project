@@ -74,7 +74,7 @@ export default function addWorkouts({ navigation, route}) {
         <Card key = {item.id} containerStyle={styles.exerciseContainer}>
             <Card.Title><Text>{item.name}</Text></Card.Title>
             <Text>Reps: {item.reps} Sets: {item.sets} Weight: {item.weight}</Text>
-                <Button buttonStyle={styles.delete} title = "Delete" onPress = {() => removeItem(item.id)}/>
+                <Button buttonStyle={styles.delete} titleStyle = {styles.buttonText} title = "Delete" onPress = {() => removeItem(item.id)}/>
         </Card>
 
     );
@@ -307,8 +307,15 @@ const styles = StyleSheet.create({
     },
 
     delete: {
-        color: 'white',
-        width: 100,
+        color: 'red',
+        backgroundColor: 'red',
+        width: 70,
         height: 30,
+        alignSelf: "flex-end",
+        fontSize: 10,
+    },
+
+    buttonText: {
+        fontSize: 10,
     },
 });
