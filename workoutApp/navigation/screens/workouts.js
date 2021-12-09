@@ -1,30 +1,81 @@
 import * as React from 'react';
-import { StyleSheet, View, ScrollView, Text } from 'react-native';
-import WorkoutButton from '../components/button';
+import { useEffect, useState } from 'react';
+import { StyleSheet, View, Text, ScrollView } from 'react-native';
+import { Card, Button} from 'react-native-elements';
+import { db } from '../../firebase-config';
+import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
 
 export default function workout({ navigation }) {
+
+    //workouts holds db []
+    const [workouts, setWorkouts] = useState([]);
+
+    //call to workouts table in db
+    const workoutsCollectionRef = collection(db, "workouts");
+
+    useEffect (() => {
+
+        //getDoc sets workouts from the database
+        const getWorkouts = async () => {
+
+            const data = await getDocs(workoutsCollectionRef);
+            setWorkouts(data.docs.map((doc) => ({ ...doc.data(), id: doc.id})))
+
+        }
+
+        getWorkouts()
+
+    })
+
+    const deleteWorkoutData = async(id) => {
+        
+        //deletes execerise for exercerises table
+        await deleteDoc(doc(db, "workouts", id))
+
+    }
+    
     return (
         <View style={styles.container}>
-            <View style={{width: "80%"}}>
-            <Text
-                style={styles.title}>Your Available Workouts</Text>
+
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                <ScrollView>
+
+                    {workouts.map((workout => {
+                        return (
+                            <Card key = {workout.id} containerStyle={styles.shadowContainer}>
+                                <Card.Title>
+                                    <Text key={workout.id}>{workout.name}</Text>
+                                </Card.Title>
+
+                                
+                                    {workout.exercises.map ((exercise => {
+
+                                        return (
+
+                                            <View key = {exercise.id}>
+                                                <Text>{exercise.name}</Text>
+                                                <Text>Sets: {exercise.sets} Reps: {exercise.reps} Weight: {exercise.weight}</Text>
+                                            </View>
+
+                                        );
+
+                                    }))}
+
+                                    <Button onPress={() => deleteWorkoutData(workout.id)} title="Delete" buttonStyle={styles.delete} titleStyle = {styles.buttonText}/>
+                                
+                            </Card>
+
+                        );
+                    }))}
+
+                </ScrollView>
+
             </View>
-            <View style={styles.buttonContainer}>{/*you can grab these from a JSON file or something*/}
-                <WorkoutButton name="Warm-up" numExercise="5" time="11"/>
-                <WorkoutButton name="Arm Day" numExercise="16" time="54"/>
-                <WorkoutButton name="Chest Day" numExercise="13" time="47"/>
-                <WorkoutButton name="Cardio" numExercise="10" time="54"/>
-                <WorkoutButton name="General Calisthenics" numExercise="12" time="43"/>
-                <WorkoutButton name="Cool down" numExercise="3" time="18"/>
-            </View>
-                    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                <Text
-                    onPress={() => alert('This is the "Workout" screen.')}
-                    style={{ color: 'white', fontSize: 26, fontWeight: 'bold' }}>Not Workout Screen</Text>
-            </View>
+
         </View>
     );
 }
+
 
 const styles = StyleSheet.create({
     container: {
@@ -33,18 +84,45 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       justifyContent: 'center',
     },
-    buttonContainer: {
-        display: "flex",
-        alignItems: "center",
-        flexDirection: "column",
-        justifyContent: "space-between"
+
+    workoutContainer: {
+        backgroundColor: 'white',
+        width: 300,
+        minHeight: 50,
+        borderColor: 'black',
+        borderWidth: 2,
+        borderRadius: 10,
+        padding: 3,
+        margin: 2,
     },
-    title: {
-        color: 'white', 
-        marginVertical: 30,
-        width: "100%",
-        fontSize: 24, 
-        fontWeight: 'bold' ,
-        textAlign: "left",
+
+    shadowContainer: {
+        display: "flex",
+        width: 300,
+        flexDirection: "column",
+        backgroundColor: 'white',
+        marginVertical: 10,
+        alignItems: 'flex-start',
+        justifyContent: 'center',
+        paddingHorizontal: 10,
+        borderRadius: 7,
+        shadowOffset: {height: 10, width: 10},
+        shadowColor: '#000',
+        shadowOpacity: 0.7,
+        shadowRadius: 5,
+    },
+
+    delete: {
+        color: 'white',
+        backgroundColor: 'red',
+        width: 100,
+        height: 30,
+    },
+
+    buttonText: {
+        fontSize: 10,
     }
+
+
+
 });

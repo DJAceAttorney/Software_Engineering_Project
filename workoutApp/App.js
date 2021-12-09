@@ -1,10 +1,14 @@
 import * as React from 'react';
 import MainContainer from './navigation/mainContainer';
 
-function App() {
+function App(props) {
+
   return (
+
     <MainContainer/>
+
   );
+ 
 }
 
 
